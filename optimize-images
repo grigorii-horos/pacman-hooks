@@ -5,7 +5,7 @@ while read line; do
     if [[ "$line" = *.jpg || "$line" = *.svg || "$line" = *.png ]]; then
       input=`wc -c $line | cut -d' ' -f1`
 
-      if [[ "$line" == *.jpg || "$line" == *.png ]]; then
+      if [[ "$line" == *.png ]]; then
         orig_colors=$(identify -format %k "$line")
 
         if (( $orig_colors < 25 )); then
@@ -16,18 +16,17 @@ while read line; do
           colors=$(awk "BEGIN {print int(${orig_colors}**0.52 )}" )
         fi
 
-        convert "$line" -colors "${colors}" "$line"
+        convert "$line" -colorspace RGB -colors "${colors}" "$line"
       fi
 
 
       if [[ "$line" = *.jpg ]]; then
-        jpegoptim --quiet --strip-all -m60 "$line" 2>/dev/null
+        jpegoptim --quiet --strip-all -m30 "$line" 2>/dev/null
       fi
 
       if [[ "$line" = *.png ]]; then
         optipng -strip all -o3 "$line" 2>/dev/null
       fi
-
 
       if [[ "$line" = *.svg ]]; then
         svgcleaner --remove-gradient-attributes=true \
