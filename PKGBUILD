@@ -9,7 +9,7 @@ pkgname=(
   'pacman-hook-cleanup'
   )
 pkgver=1.01
-pkgrel=2
+pkgrel=3
 pkgdesc="Pacman hooks metapackage"
 arch=('any')
 url='https://github.com/grigorii-horos/pacman-hooks'

@@ -8,24 +8,15 @@ while read line; do
       if [[ "$line" == *.png ]]; then
         orig_colors=$(identify -format %k "$line")
 
-        if (( $orig_colors < 25 )); then
-          colors=$orig_colors
-        elif (( $orig_colors < 1000 )); then
-          colors=$(awk "BEGIN {print int(${orig_colors}**0.6 )}" )
-        else
-          colors=$(awk "BEGIN {print int(${orig_colors}**0.52 )}" )
-        fi
+        colors=$(awk "BEGIN {print int(${orig_colors}**0.4*10 )}" )
 
-        convert "$line" -colorspace RGB -colors "${colors}" "$line"
+        convert "$line" -colors "${colors}" "$line"
+        optipng -strip all -o3 "$line" 2>/dev/null
       fi
 
 
       if [[ "$line" = *.jpg ]]; then
         jpegoptim --quiet --strip-all -m30 "$line" 2>/dev/null
-      fi
-
-      if [[ "$line" = *.png ]]; then
-        optipng -strip all -o3 "$line" 2>/dev/null
       fi
 
       if [[ "$line" = *.svg ]]; then
@@ -39,7 +30,7 @@ while read line; do
 
       output=`wc -c $line | cut -d' ' -f1`
 
-      echo "=> /$line $(numfmt --to=si --format="%.1f" $input)/$(numfmt --to=si --format="%.1f" $output)"
+      echo "  -> /$line $(numfmt --to=si --format="%.1f" $input)/$(numfmt --to=si --format="%.1f" $output)"
 
     fi
   fi
