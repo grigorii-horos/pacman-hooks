@@ -7,7 +7,7 @@ pkgname=(
   'pacman-hook-optimize-images'
   'pacman-hook-cleanup'
   )
-pkgver=1.02
+pkgver=1.1
 pkgrel=1
 pkgdesc="Pacman hooks metapackage"
 arch=('any')
@@ -71,7 +71,7 @@ package_pacman-hook-remove-documentation() {
 
 package_pacman-hook-optimize-images() {
   pkgdesc="Pacman hook who will optimize all images in package"
-  depends=('imagemagick')
+  depends=('imagemagick' 'optipng' 'jpegoptim' 'svgcleaner')
 
   mkdir -p "$pkgdir/usr/share/libalpm/scripts/" "$pkgdir/usr/share/libalpm/hooks/"
   install ../optimize-images "$pkgdir/usr/share/libalpm/scripts/"
