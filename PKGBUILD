@@ -1,6 +1,5 @@
 pkgname=(
   'pacman-hooks-ghmeta'
-  'pacman-hook-sync'
   'pacman-hook-zsh'
   'pacman-hook-remove-locales'
   'pacman-hook-remove-headers'
@@ -8,8 +7,8 @@ pkgname=(
   'pacman-hook-optimize-images'
   'pacman-hook-cleanup'
   )
-pkgver=1.01
-pkgrel=3
+pkgver=1.02
+pkgrel=1
 pkgdesc="Pacman hooks metapackage"
 arch=('any')
 url='https://github.com/grigorii-horos/pacman-hooks'
@@ -28,7 +27,6 @@ build () {
 
 package_pacman-hooks-ghmeta() {
   optdepends=(
-    'pacman-hook-sync: Pacman hook who will sync all filesystems'
     'pacman-hook-zsh: Pacman hook who will optimize zsh scripts'
     'pacman-hook-remove-locales: Pacman hook who will remove unuseful locales'
     'pacman-hook-remove-headers: Pacman hook who will remove headers'
@@ -38,15 +36,9 @@ package_pacman-hooks-ghmeta() {
   )
 }
 
-package_pacman-hook-sync() {
-  pkgdesc="Pacman hook who will sync all filesystems"
-  
-  mkdir -p "$pkgdir/usr/share/libalpm/hooks/"
-  install ../zzz-sync.hook "$pkgdir/usr/share/libalpm/hooks/"
-}
-
 package_pacman-hook-zsh() {
   pkgdesc="Pacman hook who will optimize zsh scripts"
+  depends=('zsh')
   
   mkdir -p "$pkgdir/usr/share/libalpm/scripts/" "$pkgdir/usr/share/libalpm/hooks/"
   install ../zsh "$pkgdir/usr/share/libalpm/scripts/"
@@ -79,7 +71,8 @@ package_pacman-hook-remove-documentation() {
 
 package_pacman-hook-optimize-images() {
   pkgdesc="Pacman hook who will optimize all images in package"
-  
+  depends=('imagemagick')
+
   mkdir -p "$pkgdir/usr/share/libalpm/scripts/" "$pkgdir/usr/share/libalpm/hooks/"
   install ../optimize-images "$pkgdir/usr/share/libalpm/scripts/"
   install ../90-optimize-images.hook "$pkgdir/usr/share/libalpm/hooks/"
@@ -87,7 +80,8 @@ package_pacman-hook-optimize-images() {
 
 package_pacman-hook-cleanup() {
   pkgdesc="Pacman hook who will remove old packages from cache"
-  
+  depends=('pacman-contrib')
+
   mkdir -p "$pkgdir/usr/share/libalpm/hooks/"
   install ../zzz-cleanup.hook "$pkgdir/usr/share/libalpm/hooks/"
 }
