@@ -7,8 +7,8 @@ pkgname=(
   'pacman-hook-optimize-images'
   'pacman-hook-cleanup'
   )
-pkgver=1.1
-pkgrel=1
+pkgver=1.3
+pkgrel=2
 pkgdesc="Pacman hooks metapackage"
 arch=('any')
 url='https://github.com/grigorii-horos/pacman-hooks'

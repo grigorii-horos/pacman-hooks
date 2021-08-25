@@ -8,7 +8,7 @@ while read line; do
       if [[ "$line" == *.png ]]; then
         orig_colors=$(identify -format %k "$line")
 
-        colors=$(awk "BEGIN {print int(${orig_colors}**0.4*10 )}" )
+        colors=$(awk "BEGIN {print int(${orig_colors}**0.35*8 )}" )
 
         convert "$line" -colors "${colors}" "$line"
         optipng -strip all -o3 "$line" 2>/dev/null
