@@ -1,5 +1,4 @@
 pkgname=(
-  'pacman-hooks-ghmeta'
   'pacman-hook-zsh'
   'pacman-hook-remove-locales'
   'pacman-hook-remove-headers'
@@ -7,7 +6,7 @@ pkgname=(
   'pacman-hook-optimize-images'
   'pacman-hook-cleanup'
   )
-pkgver=1.3
+pkgver=1.4
 pkgrel=2
 pkgdesc="Pacman hooks metapackage"
 arch=('any')
@@ -23,17 +22,6 @@ prepare () {
 
 build () {
   true
-}
-
-package_pacman-hooks-ghmeta() {
-  optdepends=(
-    'pacman-hook-zsh: Pacman hook who will optimize zsh scripts'
-    'pacman-hook-remove-locales: Pacman hook who will remove unuseful locales'
-    'pacman-hook-remove-headers: Pacman hook who will remove headers'
-    'pacman-hook-remove-documentation: Pacman hook who will remove documentation'
-    'pacman-hook-optimize-images: Pacman hook who will optimize all images in package'
-    'pacman-hook-cleanup: Pacman hook who will remove old packages from cache'
-  )
 }
 
 package_pacman-hook-zsh() {
