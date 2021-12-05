@@ -50,7 +50,7 @@ function optimize() {
     return
   fi
 
-  echo mv "$output" "$input"
+  mv "$output" "$input"
 
   echo "  -> $input $(numfmt --to=iec --format="%f" $input_size)/$(numfmt --to=si --format="%.1f" $output_size)"
 }
