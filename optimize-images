@@ -1,37 +1,58 @@
 #!/usr/bin/env bash
 
-while read line; do
-  if [[ -s "$line" ]]; then
-    if [[ "$line" = *.jpg || "$line" = *.svg || "$line" = *.png ]]; then
-      input=`wc -c $line | cut -d' ' -f1`
+function optimize() {
+  input="$1"
 
-      if [[ "$line" == *.png ]]; then
-        orig_colors=$(identify -format %k "$line")
-
-        colors=$(awk "BEGIN {print int(${orig_colors}**0.35*8 )}" )
-
-        convert "$line" -colors "${colors}" "$line"
-        optipng -strip all -o3 "$line" 2>/dev/null
-      fi
-
-
-      if [[ "$line" = *.jpg ]]; then
-        jpegoptim --quiet --strip-all -m30 "$line" 2>/dev/null
-      fi
-
-      if [[ "$line" = *.svg ]]; then
-        svgcleaner --remove-gradient-attributes=true \
-          --join-style-attributes=all --apply-transform-to-paths=true  \
-          --coordinates-precision=5 --properties-precision=5 \
-          --transforms-precision=7 --paths-coordinates-precision=7 \
-          --multipass --quiet \
-          "$line" "$line" 2>/dev/null
-      fi
-
-      output=`wc -c $line | cut -d' ' -f1`
-
-      echo "  -> /$line $(numfmt --to=si --format="%.1f" $input)/$(numfmt --to=si --format="%.1f" $output)"
-
-    fi
+  if [[ -z "$input" ]]; then
+    return
   fi
-done
+
+  if [[ "$input" != *.jpg && "$input" != *.svg && "$input" != *.png ]]; then
+    return
+  fi
+
+
+  input_size="$(stat -c '%s' "$input")"
+  output=''
+
+  if [[ "$input" == *.png ]]; then
+    output="$(mktemp --suffix=.png)"
+
+    orig_colors=$(identify -format %k "$input")
+    colors=$(awk "BEGIN {print int(${orig_colors}**0.3*3 )}" )
+
+    convert "$input" -colors "${colors}" "$output"
+    optipng -strip all -o3 "$output" 2>/dev/null
+  fi
+
+
+  if [[ "$input" = *.jpg ]]; then
+    output="$(mktemp --suffix=.jpg)"
+
+    jpegoptim --quiet --strip-all -m30 "$output" 2>/dev/null
+  fi
+
+  if [[ "$input" = *.svg ]]; then
+    output="$(mktemp --suffix=.svg)"
+
+    svgcleaner --remove-gradient-attributes=true \
+      --join-style-attributes=all --apply-transform-to-paths=true  \
+      --coordinates-precision=5 --properties-precision=5 \
+      --transforms-precision=7 --paths-coordinates-precision=7 \
+      --multipass --quiet \
+      "$input" "$output" 2>/dev/null
+  fi
+
+  output_size=$(stat -c '%s' "$output")
+
+
+  if [[ "$input_size" -lt "$output_size" ]]; then
+    return
+  fi
+
+  echo mv "$output" "$input"
+
+  echo "  -> $input $(numfmt --to=iec --format="%f" $input_size)/$(numfmt --to=si --format="%.1f" $output_size)"
+}
+
+optimize "${1}"

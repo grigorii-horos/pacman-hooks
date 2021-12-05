@@ -8,6 +8,6 @@ Target = opt/*
 [Action]
 Description = Optimize images
 When = PostTransaction
-Exec = /usr/share/libalpm/scripts/optimize-images
+Exec = /usr/bin/parallel /usr/share/libalpm/scripts/optimize-images '{}'
 NeedsTargets
 

@@ -4,10 +4,9 @@ pkgname=(
   'pacman-hook-remove-headers'
   'pacman-hook-remove-documentation'
   'pacman-hook-optimize-images'
-  'pacman-hook-cleanup'
   )
-pkgver=1.4
-pkgrel=2
+pkgver=1.5
+pkgrel=3
 pkgdesc="Pacman hooks metapackage"
 arch=('any')
 url='https://github.com/grigorii-horos/pacman-hooks'
@@ -64,12 +63,4 @@ package_pacman-hook-optimize-images() {
   mkdir -p "$pkgdir/usr/share/libalpm/scripts/" "$pkgdir/usr/share/libalpm/hooks/"
   install ../optimize-images "$pkgdir/usr/share/libalpm/scripts/"
   install ../90-optimize-images.hook "$pkgdir/usr/share/libalpm/hooks/"
-}
-
-package_pacman-hook-cleanup() {
-  pkgdesc="Pacman hook who will remove old packages from cache"
-  depends=('pacman-contrib')
-
-  mkdir -p "$pkgdir/usr/share/libalpm/hooks/"
-  install ../zzz-cleanup.hook "$pkgdir/usr/share/libalpm/hooks/"
 }
