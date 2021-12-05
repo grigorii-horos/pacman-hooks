@@ -1,58 +1,53 @@
 #!/usr/bin/env bash
 
-function optimize() {
-  input="$1"
+input="$1"
 
-  if [[ -z "$input" ]]; then
-    return
-  fi
+if [[ ! -s "$input" ]]; then
+  exit
+fi
 
-  if [[ "$input" != *.jpg && "$input" != *.svg && "$input" != *.png ]]; then
-    return
-  fi
+if [[ "$input" != *.jpg && "$input" != *.svg && "$input" != *.png ]]; then
+  exit
+fi
 
+input_size="$(stat -c '%s' "$input")"
+output=''
 
-  input_size="$(stat -c '%s' "$input")"
-  output=''
+if [[ "$input" == *.png ]]; then
+  output="$(mktemp --suffix=.png)"
 
-  if [[ "$input" == *.png ]]; then
-    output="$(mktemp --suffix=.png)"
+  orig_colors=$(identify -format %k "$input")
+  colors=$(awk "BEGIN {print int(${orig_colors}**0.3*3 )}" )
 
-    orig_colors=$(identify -format %k "$input")
-    colors=$(awk "BEGIN {print int(${orig_colors}**0.3*3 )}" )
-
-    convert "$input" -colors "${colors}" "$output"
-    optipng -strip all -o3 "$output" 2>/dev/null
-  fi
+  convert "$input" -colors "${colors}" "$output"
+  optipng -strip all -o3 "$output" 2>/dev/null
+fi
 
 
-  if [[ "$input" = *.jpg ]]; then
-    output="$(mktemp --suffix=.jpg)"
+if [[ "$input" = *.jpg ]]; then
+  output="$(mktemp --suffix=.jpg)"
 
-    jpegoptim --quiet --strip-all -m30 "$output" 2>/dev/null
-  fi
+  jpegoptim --quiet --strip-all -m30 "$output" 2>/dev/null
+fi
 
-  if [[ "$input" = *.svg ]]; then
-    output="$(mktemp --suffix=.svg)"
+if [[ "$input" = *.svg ]]; then
+  output="$(mktemp --suffix=.svg)"
 
-    svgcleaner --remove-gradient-attributes=true \
-      --join-style-attributes=all --apply-transform-to-paths=true  \
-      --coordinates-precision=5 --properties-precision=5 \
-      --transforms-precision=7 --paths-coordinates-precision=7 \
-      --multipass --quiet \
-      "$input" "$output" 2>/dev/null
-  fi
+  svgcleaner --remove-gradient-attributes=true \
+    --join-style-attributes=all --apply-transform-to-paths=true  \
+    --coordinates-precision=5 --properties-precision=5 \
+    --transforms-precision=7 --paths-coordinates-precision=7 \
+    --multipass --quiet \
+    "$input" "$output" 2>/dev/null
+fi
 
-  output_size=$(stat -c '%s' "$output")
+output_size=$(stat -c '%s' "$output")
 
 
-  if [[ "$input_size" -lt "$output_size" ]]; then
-    return
-  fi
+if [[ "$input_size" -lt "$output_size" ]]; then
+  exit
+fi
 
-  mv "$output" "$input"
+mv "$output" "$input"
 
-  echo "  -> $input $(numfmt --to=iec --format="%f" $input_size)/$(numfmt --to=si --format="%.1f" $output_size)"
-}
-
-optimize "${1}"
+echo "  -> /$input $(numfmt --to=iec $input_size)/$(numfmt --to=iec $output_size)"
