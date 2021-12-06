@@ -48,6 +48,6 @@ if [[ "$input_size" -lt "$output_size" ]]; then
   exit
 fi
 
-mv "$output" "$input"
+cat "$output" > "$input"
 
 echo "  -> /$input $(numfmt --to=iec $input_size)/$(numfmt --to=iec $output_size)"
