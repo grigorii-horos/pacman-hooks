@@ -3,7 +3,7 @@
 while read line; do
 	if [[ -f "$line" ]]; then
 
-			if [[ "$line" = usr/share/doc/* ]]; then
+			if [[ "$line" = usr/share/doc/* && ! "$line" = usr/share/doc/pkgfile/* ]]; then
 					echo -n > "$line"
 			fi
 		

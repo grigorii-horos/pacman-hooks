@@ -6,7 +6,7 @@ pkgname=(
   'pacman-hook-optimize-images'
   )
 pkgver=1.5
-pkgrel=6
+pkgrel=8
 pkgdesc="Pacman hooks metapackage"
 arch=('any')
 url='https://github.com/grigorii-horos/pacman-hooks'
