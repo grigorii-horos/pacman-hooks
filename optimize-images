@@ -17,7 +17,7 @@ if [[ "$input" == *.png ]]; then
   output="$(mktemp --suffix=.png)"
 
   orig_colors=$(identify -format %k "$input")
-  colors=$(awk "BEGIN {print int(${orig_colors}**0.4 )}" )
+  colors=$(awk "BEGIN {print int(${orig_colors}**0.5 * 2 )}" )
 
   convert "$input" -colors "${colors}" "$output"
   optipng -strip all -o3 "$output" 2>/dev/null
