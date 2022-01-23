@@ -10,6 +10,10 @@ if [[ "$input" != *.jpg && "$input" != *.svg && "$input" != *.png ]]; then
   exit
 fi
 
+if [[ "$input" != usr/share/icons/* ]]; then
+  exit
+fi
+
 input_size="$(stat -c '%s' "$input")"
 output=''
 
@@ -22,7 +26,6 @@ if [[ "$input" == *.png ]]; then
   convert "$input" -colors "${colors}" "$output"
   optipng -strip all -o3 "$output" 2>/dev/null
 fi
-
 
 if [[ "$input" = *.jpg ]]; then
   output="$(mktemp --suffix=.jpg)"
