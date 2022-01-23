@@ -10,7 +10,7 @@ if [[ "$input" != *.jpg && "$input" != *.svg && "$input" != *.png ]]; then
   exit
 fi
 
-if [[ "$input" != usr/share/icons/* ]]; then
+if [[ "$input" == usr/share/icons/* ]]; then
   exit
 fi
 

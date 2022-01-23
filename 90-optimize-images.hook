@@ -2,8 +2,13 @@
 Operation = Install
 Operation = Upgrade
 Type = File
-Target = usr/*
-Target = opt/*
+Target = usr/*.png
+Target = usr/*.svg
+Target = usr/*.jpg
+Target = opt/*.png
+Target = opt/*.svg
+Target = opt/*.jpg
+Target = !usr/share/icons/*
 
 [Action]
 Description = Optimize images
