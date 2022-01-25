@@ -45,12 +45,14 @@ if [[ "$input" = *.svg ]]; then
 fi
 
 if [[ ! -s "$output" ]]; then
+  rm "$output"
   exit
 fi
 
 output_size=$(stat -c '%s' "$output")
 
 if [[ "$input_size" -lt "$output_size" ]]; then
+  rm "$output"
   exit
 fi
 
