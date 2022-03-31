@@ -5,8 +5,8 @@ pkgname=(
   'pacman-hook-remove-documentation'
   'pacman-hook-optimize-images'
   )
-pkgver=1.5
-pkgrel=13
+pkgver=1.6
+pkgrel=1
 pkgdesc="Pacman hooks metapackage"
 arch=('any')
 url='https://github.com/grigorii-horos/pacman-hooks'

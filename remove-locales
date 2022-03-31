@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
 while read line; do
-
 	if [[ -f "$line" ]]; then
-		
 			if [[ "$line" = usr/share/locale/* ]]; then
 				if [[ "$line" != usr/share/locale/en* ]]; then
 					echo -n > "$line"
@@ -75,7 +73,5 @@ while read line; do
 					echo -n > "$line"
 				fi
 			fi
-			
 	fi
-
 done
