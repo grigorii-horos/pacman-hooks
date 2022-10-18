@@ -9,4 +9,3 @@ Description = Optimize zsh scripts
 When = PostTransaction
 Exec = /usr/share/libalpm/scripts/zsh
 NeedsTargets
-

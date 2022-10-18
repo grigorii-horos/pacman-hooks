@@ -1,5 +1,6 @@
 pkgname=(
   'pacman-hook-zsh'
+  'pacman-hook-zsh-rehash'
   'pacman-hook-remove-locales'
   'pacman-hook-remove-headers'
   'pacman-hook-remove-documentation'
@@ -30,6 +31,13 @@ package_pacman-hook-zsh() {
   mkdir -p "$pkgdir/usr/share/libalpm/scripts/" "$pkgdir/usr/share/libalpm/hooks/"
   install ../zsh "$pkgdir/usr/share/libalpm/scripts/"
   install ../90-zsh.hook "$pkgdir/usr/share/libalpm/hooks/"
+}
+
+package_pacman-hook-zsh-rehash() {
+  pkgdesc="Pacman hook who will run zsh rehash"
+  depends=('zsh')
+  
+  install ../90-zsh-rehash.hook "$pkgdir/usr/share/libalpm/hooks/"
 }
 
 package_pacman-hook-remove-locales() {
