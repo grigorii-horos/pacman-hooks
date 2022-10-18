@@ -37,6 +37,7 @@ package_pacman-hook-zsh-rehash() {
   pkgdesc="Pacman hook who will run zsh rehash"
   depends=('zsh')
   
+  mkdir -p "$pkgdir/usr/share/libalpm/hooks/"
   install ../90-zsh-rehash.hook "$pkgdir/usr/share/libalpm/hooks/"
 }
 
