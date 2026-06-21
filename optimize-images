@@ -26,8 +26,15 @@ output=''
 if [[ "$input" == *.png ]]; then
   output="$(mktemp --suffix=.png)"
   cp "$input" "$output"
-  # Lossy, controlled: keep perceptual quality >= 80.
-  pngquant --quality=80-95 --skip-if-larger --strip --force --output "$output" "$output" 2>/dev/null
+  # Lossy, controlled: keep perceptual quality >= 80. Write to a separate
+  # temp and only swap in on success, so a skip/failure never leaves a
+  # half-written $output for optipng to read.
+  pngquant_out="$(mktemp --suffix=.png)"
+  if pngquant --quality=80-95 --skip-if-larger --strip --force --output "$pngquant_out" "$output" 2>/dev/null; then
+    mv "$pngquant_out" "$output"
+  else
+    rm -f "$pngquant_out"
+  fi
   # Lossless final squeeze.
   optipng -strip all -o3 "$output" 2>/dev/null
 fi
