@@ -6,7 +6,7 @@ pkgname=(
   'pacman-hook-remove-documentation'
   'pacman-hook-optimize-images'
   )
-pkgver=1.6
+pkgver=1.7
 pkgrel=1
 pkgdesc="Pacman hooks metapackage"
 arch=('any')
