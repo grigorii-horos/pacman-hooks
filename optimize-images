@@ -2,6 +2,7 @@
 
 input="$1"
 
+# Skip: empty, non-image, icons, or too small.
 if [[ ! -s "$input" ]]; then
   exit
 fi
@@ -24,45 +25,39 @@ output=''
 
 if [[ "$input" == *.png ]]; then
   output="$(mktemp --suffix=.png)"
-
-  orig_colors=$(identify -format %k "$input")
-  colors=$(awk "BEGIN {print int(${orig_colors}**0.4 * 5 )}" )
-
-  convert "$input" -colors "${colors}" "$output"
+  cp "$input" "$output"
+  # Lossy, controlled: keep perceptual quality >= 80.
+  pngquant --quality=80-95 --skip-if-larger --strip --force --output "$output" "$output" 2>/dev/null
+  # Lossless final squeeze.
   optipng -strip all -o3 "$output" 2>/dev/null
 fi
 
-if [[ "$input" = *.jpg ]]; then
+if [[ "$input" == *.jpg ]]; then
   output="$(mktemp --suffix=.jpg)"
-
+  cp "$input" "$output"
   jpegoptim --quiet --strip-all -m30 "$output" 2>/dev/null
 fi
 
-if [[ "$input" = *.svg ]]; then
+if [[ "$input" == *.svg ]]; then
   output="$(mktemp --suffix=.svg)"
-
-  svgcleaner --remove-gradient-attributes=true \
-    --join-style-attributes=all --apply-transform-to-paths=true  \
-    --coordinates-precision=5 --properties-precision=5 \
-    --transforms-precision=7 --paths-coordinates-precision=7 \
-    --multipass --quiet \
-    "$input" "$output" 2>/dev/null
+  svgo --multipass --quiet -i "$input" -o "$output" 2>/dev/null
 fi
 
 if [[ ! -s "$output" ]]; then
-  rm "$output"
+  rm -f "$output"
   exit
 fi
 
-output_size=$(stat -c '%s' "$output")
+output_size="$(stat -c '%s' "$output")"
 
-if [[ "$input_size" -lt "$output_size" ]]; then
-  rm "$output"
+# Never enlarge.
+if [[ "$input_size" -le "$output_size" ]]; then
+  rm -f "$output"
   exit
 fi
 
 cat "$output" > "$input"
 
-echo "  -> /$input $(numfmt --to=iec $input_size)/$(numfmt --to=iec $output_size)"
+echo "  -> /$input $(numfmt --to=iec "$input_size")/$(numfmt --to=iec "$output_size")"
 
-rm "$output"
+rm -f "$output"
